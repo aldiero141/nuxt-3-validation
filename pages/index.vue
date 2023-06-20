@@ -21,36 +21,22 @@
 
 <script setup lang="ts">
 import { useForm } from "vee-validate";
+import * as yup from "yup";
 
-function validateUsername(value: string) {
-  if (!value) {
-    return "This field is required";
-  }
-  const regex = /^[a-zA-Z0-9]*$/g;
-  if (!regex.test(value)) {
-    return "This field must be valid (ex.AA0000)";
-  }
-  return true;
-}
-
-function validatePassword(value: string) {
-  if (!value) {
-    return "this field is required";
-  }
-  return true;
-}
-
-const simpleSchema = {
-  username: validateUsername,
-  password: validatePassword,
-};
+const schema = yup.object({
+  username: yup
+    .string()
+    .required("Username is required")
+    .matches(/^[a-zA-Z0-9]*$/g, "This field must be valid (ex.AA0000)"),
+  password: yup.string().required("Password is required").min(8),
+});
 
 const { handleSubmit } = useForm({
-  validationSchema: simpleSchema,
+  validationSchema: schema,
 });
 
 const submit = handleSubmit((values) => {
   console.log({ values });
-  alert("Submit Form");
+  alert("Success Sign-in");
 });
 </script>
